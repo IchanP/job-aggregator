@@ -1,0 +1,26 @@
+{
+  "name": "job-script",
+  "version": "1.0.0",
+  "description": "Requests new job posts from several job boards and compiles them into a list.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npm run test",
+    "start": "tsx --env-file=.env ./src/index.ts"
+  },
+  "keywords": [
+    "job",
+    "automation",
+    "linkedin"
+  ],
+  "author": "Pontus Grandin",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "node-html-parser": "^7.0.1",
+    "tsx": "^4.20.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
+}
