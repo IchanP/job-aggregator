@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-interface Job {
+export interface LinkedinJob {
   jobId: string;
   title: string;
   company: {
@@ -43,10 +43,10 @@ export async function LinkedinDummyData() {
     path.join(__dirname, "../../dummydata/jobs.json"),
     "utf-8"
   );
-  return JSON.parse(res) as Array<Job>;
+  return JSON.parse(res) as Array<LinkedinJob>;
 }
 
-export async function LinkedinBulk(): Promise<Array<Job>> {
+export async function LinkedinBulk(): Promise<Array<LinkedinJob>> {
   try {
     if (!headers["x-rapidapi-key"]) throw new Error("Missing API key.");
 
@@ -59,7 +59,7 @@ export async function LinkedinBulk(): Promise<Array<Job>> {
       return [];
     }
 
-    const jobs: Array<Job> = res.data.data.jobs;
+    const jobs: Array<LinkedinJob> = res.data.data.jobs;
     return jobs;
   } catch (e) {
     console.error(`Failed to fetch Linkedin job data: ${e}`);
