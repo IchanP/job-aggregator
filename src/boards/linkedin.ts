@@ -17,6 +17,8 @@ export interface LinkedinJob {
   url: string;
 }
 
+// TODO - turn into .env variables somehow
+
 const request_url =
   "https://linkdapi-best-unofficial-linkedin-api.p.rapidapi.com/api/v1/jobs/search";
 
@@ -67,8 +69,8 @@ export async function LinkedinBulk(): Promise<Array<LinkedinJob>> {
   }
 }
 
-// TODO - maybe we can make a bulk request?
-export async function LinkedinDescription(url) {
+// TODO - maybe we can make a bulk request... use Promise API for that?
+export async function LinkedinDescription(url: string) {
   const html = await axios.get(url);
 
   const root = parse(html.data);
