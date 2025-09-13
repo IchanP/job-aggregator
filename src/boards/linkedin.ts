@@ -15,28 +15,18 @@ export interface LinkedinJob {
   description?: string;
 }
 
-// TODO - turn into .env variables somehow
-
+// TODO migrate from this to another scraper?
 const request_url =
   "https://linkdapi-best-unofficial-linkedin-api.p.rapidapi.com/api/v1/jobs/search";
-
-const experienceParam = "internship,entry_level";
-const location = "sweden";
-const keyword = "fullstack";
-
-const params = {
-  keyword: "frontend",
-  location: "sweden",
-  experience: "internship,entry_level",
-  timePosted: "1week",
-};
 
 const headers = {
   "x-rapidapi-key": process.env.RAPID_API_KEY,
   "x-rapidapi-host": "linkdapi-best-unofficial-linkedin-api.p.rapidapi.com",
 };
 
-export async function LinkedinBulk(): Promise<Array<LinkedinJob>> {
+export async function LinkedinBulk(
+  params: LinkedInConfig
+): Promise<Array<LinkedinJob>> {
   try {
     if (!headers["x-rapidapi-key"]) throw new Error("Missing API key.");
 

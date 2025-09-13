@@ -38,6 +38,7 @@ export function FilterOnKeyPhrases(
       try {
         const regex = new RegExp(pattern, "i");
         if (job.description?.match(regex)) {
+          console.log(`Filtering job with title: ${job.title}`);
           shouldFilter = true;
           totalFiltered++;
           break;

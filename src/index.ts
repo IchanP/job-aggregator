@@ -1,4 +1,8 @@
-import { LinkedinDescription, LinkedinJob } from "./boards/linkedin.js";
+import {
+  LinkedinBulk,
+  LinkedinDescription,
+  LinkedinJob,
+} from "./boards/linkedin.js";
 import "./cfg/sqlite.js";
 import { SetupDb } from "./cfg/sqlite.js";
 import { InsertRows } from "./sql/load.js";
@@ -13,10 +17,13 @@ try {
     "../../dummydata/jobs.json"
   );
 
+  /*   const linekdInJobs = await LinkedinBulk(config.linkedInParams);
+   */
+
   // TODO - combine this into one function
-  /*   const newJobs = await FilterById(db, linkedinJobs);
+  const newJobs = await FilterById(db, linkedinJobs);
   // Insert immediately after filtering by ID so no unnecessary scraping happens
-  await InsertRows(db, newJobs); */
+  await InsertRows(db, newJobs);
 
   const scrapableJobs = FilterJobs(linkedinJobs);
 
@@ -24,7 +31,6 @@ try {
   const promises = scrapableJobs.map((job) => LinkedinDescription(job));
   await Promise.allSettled(promises);
 
-  // TODO filter based on what's in the text...
   const matchingJobs = FilterOnKeyPhrases(scrapableJobs, config.blacklist);
 
   // TODO - close DB when the script goes into idle mode...
