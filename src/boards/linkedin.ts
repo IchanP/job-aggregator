@@ -1,8 +1,5 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 export interface LinkedinJob {
   jobId: string;
@@ -15,6 +12,7 @@ export interface LinkedinJob {
   postedDate: string;
   exactDate: string;
   url: string;
+  description?: string;
 }
 
 // TODO - turn into .env variables somehow
@@ -38,16 +36,6 @@ const headers = {
   "x-rapidapi-host": "linkdapi-best-unofficial-linkedin-api.p.rapidapi.com",
 };
 
-export async function LinkedinDummyData() {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const res = fs.readFileSync(
-    path.join(__dirname, "../../dummydata/jobs.json"),
-    "utf-8"
-  );
-  return JSON.parse(res) as Array<LinkedinJob>;
-}
-
 export async function LinkedinBulk(): Promise<Array<LinkedinJob>> {
   try {
     if (!headers["x-rapidapi-key"]) throw new Error("Missing API key.");
@@ -70,9 +58,16 @@ export async function LinkedinBulk(): Promise<Array<LinkedinJob>> {
 }
 
 // TODO - maybe we can make a bulk request... use Promise API for that?
-export async function LinkedinDescription(url: string) {
-  const html = await axios.get(url);
-
-  const root = parse(html.data);
-  root.querySelector("div.show-more-less-html__markup")?.rawText;
+export async function LinkedinDescription(job: LinkedinJob) {
+  try {
+    const html = await axios.get(job.url);
+    console.log(`Gathering description from ${job.url}`);
+    const root = parse(html.data);
+    job.description = root.querySelector(
+      "div.show-more-less-html__markup"
+    )?.rawText;
+  } catch (err) {
+    console.error(`Failed to fetch description for ${job.url}: ${err}`);
+    job.description = "";
+  }
 }

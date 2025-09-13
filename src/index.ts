@@ -1,19 +1,31 @@
-import { LinkedinBulk, LinkedinDummyData } from "./boards/linkedin.js";
+import { LinkedinDescription, LinkedinJob } from "./boards/linkedin.js";
 import "./cfg/sqlite.js";
 import { SetupDb } from "./cfg/sqlite.js";
 import { InsertRows } from "./sql/load.js";
-import { FilterById } from "./filters";
+import { FilterById, FilterJobs } from "./filters";
+import { FilterOnKeyPhrases } from "./filters/data.js";
+import { ReadJsonFile } from "./cfg/getCfg.js";
 
 try {
+  const config = await ReadJsonFile<Config>("../config.json");
   const db = await SetupDb();
-  const linkedinJobs = await LinkedinDummyData();
+  const linkedinJobs = await ReadJsonFile<LinkedinJob[]>(
+    "../../dummydata/jobs.json"
+  );
 
   // TODO - combine this into one function
-  const newJobs = await FilterById(db, linkedinJobs);
+  /*   const newJobs = await FilterById(db, linkedinJobs);
   // Insert immediately after filtering by ID so no unnecessary scraping happens
-  await InsertRows(db, newJobs);
+  await InsertRows(db, newJobs); */
 
-  // TODO - Perform webscraping of linkedin
+  const scrapableJobs = FilterJobs(linkedinJobs);
+
+  // Bulk scrape... a bit bad practice since we're directly modifying the job object but it's the cleanest way
+  const promises = scrapableJobs.map((job) => LinkedinDescription(job));
+  await Promise.allSettled(promises);
+
+  // TODO filter based on what's in the text...
+  const matchingJobs = FilterOnKeyPhrases(scrapableJobs, config.blacklist);
 
   // TODO - close DB when the script goes into idle mode...
 } catch (e) {
