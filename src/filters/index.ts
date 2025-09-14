@@ -1,6 +1,5 @@
 import { FilterById } from "./sql";
 import { FilterByTitle } from "./data";
-import { LinkedinJob } from "@/boards/linkedin";
 
 export { FilterById };
 

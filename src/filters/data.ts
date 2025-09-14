@@ -1,5 +1,3 @@
-import { LinkedinJob } from "@/boards/linkedin";
-
 export function FilterByTitle(jobs: Array<LinkedinJob>): Array<LinkedinJob> {
   const filtered: LinkedinJob[] = [];
 
@@ -38,7 +36,9 @@ export function FilterOnKeyPhrases(
       try {
         const regex = new RegExp(pattern, "i");
         if (job.description?.match(regex)) {
-          console.log(`Filtering job with title: ${job.title}`);
+          console.log(
+            `Filtering job with title: ${job.title} in location: ${job.location}`
+          );
           shouldFilter = true;
           totalFiltered++;
           break;

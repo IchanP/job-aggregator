@@ -1,5 +1,6 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
+import { setTimeout } from "timers/promises";
 
 // TODO migrate from this to another scraper?
 const request_url =
@@ -33,8 +34,20 @@ export async function LinkedinBulk(
   }
 }
 
-// TODO - maybe we can make a bulk request... use Promise API for that?
-export async function LinkedinDescription(job: LinkedinJob) {
+export async function ScrapeLinkedinBulk(jobs: LinkedinJob[]) {
+  const batchSize = 5;
+  const delay = 3000;
+
+  for (let i = 0; i < jobs.length; i += batchSize) {
+    const spliced = jobs.slice(i, i + batchSize);
+    const promises = spliced.map((job) => LinkedinDescription(job));
+
+    await Promise.allSettled(promises);
+    await setTimeout(delay);
+  }
+}
+
+async function LinkedinDescription(job: LinkedinJob) {
   try {
     const html = await axios.get(job.url);
     console.log(`Gathering description from ${job.url}`);

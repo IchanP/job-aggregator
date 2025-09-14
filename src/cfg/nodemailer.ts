@@ -11,7 +11,7 @@ export function CreateEmailTransporter(config: EmailConfig) {
 
   transporter
     .verify()
-    .then(() => console.log("Successfully connected to the email service."))
+    .then(() => console.log("Successfully connected to the email service.\n"))
     .catch(() => {
       console.error("Failed to connect to the email service. Exiting...");
       process.exit(1);

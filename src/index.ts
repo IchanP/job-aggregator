@@ -1,4 +1,4 @@
-import { LinkedinBulk, LinkedinDescription } from "./boards/linkedin.js";
+import { LinkedinBulk, ScrapeLinkedinBulk } from "./boards/linkedin.js";
 import "./cfg/sqlite.js";
 import { SetupDb } from "./cfg/sqlite.js";
 import { InsertJobs } from "./sql/load.js";
@@ -8,6 +8,7 @@ import { ReadJsonFile } from "./util/index.js";
 import { BuildEmail } from "./emailer/builder.js";
 import { CreateEmailTransporter } from "./cfg/nodemailer.js";
 import { SendEmail } from "./emailer/sender.js";
+import { setTimeout } from "timers/promises";
 
 try {
   const config = await ReadJsonFile<Config>("../config.json");
@@ -15,6 +16,7 @@ try {
   const transporter = CreateEmailTransporter(config.emailConfig);
 
   const linekdInJobs = await LinkedinBulk(config.linkedInParams);
+  console.log(`Fetched a total of ${linekdInJobs.length} from the API! \n`);
 
   // TODO - combine this into one function
   const idFilteretedJobs = await FilterById(db, linekdInJobs);
@@ -22,9 +24,7 @@ try {
   const scrapableJobs = FilterJobs(linekdInJobs);
 
   // Bulk scrape... a bit bad practice since we're directly modifying the job object but it's the cleanest way
-  // TODO debounce this so we don't hit the 429 error code...
-  const promises = scrapableJobs.map((job) => LinkedinDescription(job));
-  await Promise.allSettled(promises);
+  await ScrapeLinkedinBulk(scrapableJobs);
 
   const matchingJobs = FilterOnKeyPhrases(scrapableJobs, config.blacklist);
 
