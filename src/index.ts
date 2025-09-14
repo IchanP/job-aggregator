@@ -1,7 +1,7 @@
 import { LinkedinBulk, LinkedinDescription } from "./boards/linkedin.js";
 import "./cfg/sqlite.js";
 import { SetupDb } from "./cfg/sqlite.js";
-import { InsertRows } from "./sql/load.js";
+import { InsertJobs } from "./sql/load.js";
 import { FilterById, FilterJobs } from "./filters";
 import { FilterOnKeyPhrases } from "./filters/data.js";
 import { ReadJsonFile } from "./util/index.js";
@@ -17,9 +17,7 @@ try {
   const linekdInJobs = await LinkedinBulk(config.linkedInParams);
 
   // TODO - combine this into one function
-  const newJobs = await FilterById(db, linekdInJobs);
-  // Insert immediately after filtering by ID so no unnecessary scraping happens
-  await InsertRows(db, newJobs);
+  const idFilteretedJobs = await FilterById(db, linekdInJobs);
 
   const scrapableJobs = FilterJobs(linekdInJobs);
 
@@ -32,6 +30,9 @@ try {
 
   const emailText = BuildEmail(matchingJobs, config.keywords);
   await SendEmail(transporter, emailText, config.emailConfig);
+
+  // Insert the found jobs into the db
+  await InsertJobs(db, idFilteretedJobs);
 
   // TODO - close DB when the script goes into idle mode...
 } catch (e) {

@@ -1,4 +1,3 @@
-import { LinkedinJob } from "@/boards/linkedin";
 import sqlite3 from "sqlite3";
 import { RunSQL } from ".";
 
@@ -6,7 +5,7 @@ import { RunSQL } from ".";
  * TODO - Fix this so bulk insertion doesn't fail if ID is not unique...
  * This function should only be called after the jobs array has been filtered of IDs already existing in the database.
  */
-export async function InsertRows(
+export async function InsertJobs(
   db: sqlite3.Database,
   jobs: Array<LinkedinJob>
 ) {
