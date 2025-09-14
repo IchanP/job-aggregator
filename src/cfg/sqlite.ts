@@ -1,11 +1,9 @@
 import { ExecuteSql } from "@/sql";
 import sqlite3 from "sqlite3";
 
-let db: sqlite3.Database;
-
 export async function SetupDb(): Promise<sqlite3.Database> {
   try {
-    db = new sqlite3.Database("jobs.db");
+    const db = new sqlite3.Database("jobs.db");
     await SetupLinkedinTable(db);
     return db;
   } catch (e) {

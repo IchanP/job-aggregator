@@ -217,5 +217,21 @@
         "url": "https://www.linkedin.com/jobs/view/4292182339",
         "entityUrn": "urn:li:jobPosting:4292182339",
         "benefits": "Be an early applicant"
+    },
+    {
+        "jobId": "4297253841",
+        "title": "Systemutvecklare till SSG",
+        "screenReader": "Systemutvecklare till SSG",
+        "company": {
+            "name": "Academic Work",
+            "url": "https://www.linkedin.com/company/academic-work",
+            "imageUrl": "ada.da"
+        },
+        "location": "Sundsvall Municipality, Västernorrland County, Sweden",
+        "postedDate": "5 days ago",
+        "exactDate": "2025-09-08",
+        "url": "https://www.linkedin.com/jobs/view/4297253841/",
+        "entityUrn": "urn:li:jobPosting:4297253841",
+        "benefits": "Be an early applicant"
     }
 ]

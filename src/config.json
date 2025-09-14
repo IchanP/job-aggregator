@@ -1,0 +1,14 @@
+{
+   "blacklist": ["[0-9]+ years of.*experience", "några\\s+års?\\s+arbetslivserfarenhet", "senior"],
+   "linkedInParams": {
+      "experience": "internship,entry_level",
+      "location": "sweden",
+      "keyword": "fullstack",
+      "timePosted": "1week"
+   },
+   "keywords": ["typescript", "javascript", "node.js", "nodejs", "mongodb", "react"],
+   "emailConfig": {
+      "service": "gmail",
+      "email": "smeaurix@gmail.com"
+   }
+}

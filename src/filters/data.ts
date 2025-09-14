@@ -22,3 +22,43 @@ function CheckLatinCharacterCount(str: string) {
 
   return nonLatin / str.length < 0.5;
 }
+
+export function FilterOnKeyPhrases(
+  jobs: Array<LinkedinJob>,
+  filter: Array<string>
+): Array<LinkedinJob> {
+  const filtered: Array<LinkedinJob> = [];
+
+  let totalFiltered = 0;
+
+  for (const job of jobs) {
+    let shouldFilter = false;
+
+    for (const pattern of filter) {
+      try {
+        const regex = new RegExp(pattern, "i");
+        if (job.description?.match(regex)) {
+          console.log(`Filtering job with title: ${job.title}`);
+          shouldFilter = true;
+          totalFiltered++;
+          break;
+        }
+      } catch (e: unknown) {
+        if (job.description?.toLowerCase().includes(pattern.toLowerCase())) {
+          shouldFilter = true;
+          totalFiltered++;
+          break;
+        }
+      }
+    }
+    if (!shouldFilter) {
+      filtered.push(job);
+    }
+  }
+
+  console.log(
+    `\n>>>>>>>>>> Filtered a total of: ${totalFiltered} jobs based on their description. <<<<<<<<<<\n`
+  );
+
+  return filtered;
+}
