@@ -4,7 +4,7 @@ export function CreateEmailTransporter(config: EmailConfig) {
   const transporter = nodemailer.createTransport({
     service: config.service,
     auth: {
-      user: config.email,
+      user: config.sender,
       pass: process.env.GOOGLE_APP_PASSWORD,
     },
   });

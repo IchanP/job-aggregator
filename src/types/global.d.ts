@@ -19,7 +19,8 @@ interface Config {
 
 interface EmailConfig {
   service: string;
-  email: stirng;
+  sender: string;
+  receiver: string;
 }
 
 interface LinkedinJob {

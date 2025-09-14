@@ -7,33 +7,31 @@ import { FilterOnKeyPhrases } from "./filters/data.js";
 import { ReadJsonFile } from "./util/index.js";
 import { BuildEmail } from "./emailer/builder.js";
 import { CreateEmailTransporter } from "./cfg/nodemailer.js";
+import { SendEmail } from "./emailer/sender.js";
 
 try {
   const config = await ReadJsonFile<Config>("../config.json");
   const db = await SetupDb();
   const transporter = CreateEmailTransporter(config.emailConfig);
-  const linkedinJobs = await ReadJsonFile<LinkedinJob[]>(
-    "../../dummydata/jobs.json"
-  );
 
-  /*   const linekdInJobs = await LinkedinBulk(config.linkedInParams);
-   */
+  const linekdInJobs = await LinkedinBulk(config.linkedInParams);
 
   // TODO - combine this into one function
-  const newJobs = await FilterById(db, linkedinJobs);
+  const newJobs = await FilterById(db, linekdInJobs);
   // Insert immediately after filtering by ID so no unnecessary scraping happens
   await InsertRows(db, newJobs);
 
-  const scrapableJobs = FilterJobs(linkedinJobs);
+  const scrapableJobs = FilterJobs(linekdInJobs);
 
   // Bulk scrape... a bit bad practice since we're directly modifying the job object but it's the cleanest way
+  // TODO debounce this so we don't hit the 429 error code...
   const promises = scrapableJobs.map((job) => LinkedinDescription(job));
   await Promise.allSettled(promises);
 
   const matchingJobs = FilterOnKeyPhrases(scrapableJobs, config.blacklist);
 
-  // TODO generate up a report with link...
-  BuildEmail(matchingJobs, config.keywords);
+  const emailText = BuildEmail(matchingJobs, config.keywords);
+  await SendEmail(transporter, emailText, config.emailConfig);
 
   // TODO - close DB when the script goes into idle mode...
 } catch (e) {
