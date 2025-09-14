@@ -36,7 +36,7 @@ export async function LinkedinBulk(
 
 export async function ScrapeLinkedinBulk(jobs: LinkedinJob[]) {
   const batchSize = 5;
-  const delay = 3000;
+  const delay = 4000;
 
   for (let i = 0; i < jobs.length; i += batchSize) {
     const spliced = jobs.slice(i, i + batchSize);

@@ -12,7 +12,7 @@ interface LinkedInConfig {
 
 interface Config {
   blacklist: Array<string>;
-  linkedInParams: LinkedInConfig;
+  linkedInParams: Array<LinkedInConfig>;
   keywords: Array<string>;
   emailConfig: EmailConfig;
 }

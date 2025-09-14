@@ -20,5 +20,3 @@ export async function FilterById(
     return [];
   }
 }
-
-//  TODO - Filter jobs with non-latin titles?

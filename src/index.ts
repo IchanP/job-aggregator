@@ -15,13 +15,22 @@ try {
   const db = await SetupDb();
   const transporter = CreateEmailTransporter(config.emailConfig);
 
-  const linekdInJobs = await LinkedinBulk(config.linkedInParams);
+  const linekdInJobs = [];
+
+  for (let i = 0; i < config.linkedInParams.length; i++) {
+    linekdInJobs.push(...(await LinkedinBulk(config.linkedInParams[i])));
+  }
+
   console.log(`Fetched a total of ${linekdInJobs.length} from the API! \n`);
 
-  // TODO - combine this into one function
-  const idFilteretedJobs = await FilterById(db, linekdInJobs);
+  const uniqueJobs = linekdInJobs.filter(
+    (value, index, self) =>
+      self.findIndex((v) => v.jobId === value.jobId) === index
+  );
 
-  const scrapableJobs = FilterJobs(linekdInJobs);
+  const idFilteretedJobs = await FilterById(db, uniqueJobs);
+
+  const scrapableJobs = FilterJobs(uniqueJobs);
 
   // Bulk scrape... a bit bad practice since we're directly modifying the job object but it's the cleanest way
   await ScrapeLinkedinBulk(scrapableJobs);
@@ -29,6 +38,9 @@ try {
   const matchingJobs = FilterOnKeyPhrases(scrapableJobs, config.blacklist);
 
   const emailText = BuildEmail(matchingJobs, config.keywords);
+
+  console.log(`Sending a total of ${matchingJobs.length} jobs!`);
+
   await SendEmail(transporter, emailText, config.emailConfig);
 
   // Insert the found jobs into the db
