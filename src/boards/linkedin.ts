@@ -1,20 +1,6 @@
 import axios from "axios";
 import { parse } from "node-html-parser";
 
-export interface LinkedinJob {
-  jobId: string;
-  title: string;
-  company: {
-    name: string;
-    url: string;
-  };
-  location: string;
-  postedDate: string;
-  exactDate: string;
-  url: string;
-  description?: string;
-}
-
 // TODO migrate from this to another scraper?
 const request_url =
   "https://linkdapi-best-unofficial-linkedin-api.p.rapidapi.com/api/v1/jobs/search";
