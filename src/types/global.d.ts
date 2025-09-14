@@ -14,10 +14,12 @@ interface Config {
   blacklist: Array<string>;
   linkedInParams: LinkedInConfig;
   keywords: Array<string>;
-  emailConfig: {
-    service: string;
-    email: string;
-  };
+  emailConfig: EmailConfig;
+}
+
+interface EmailConfig {
+  service: string;
+  email: stirng;
 }
 
 interface LinkedinJob {

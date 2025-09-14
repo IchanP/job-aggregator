@@ -5,12 +5,13 @@ import { InsertRows } from "./sql/load.js";
 import { FilterById, FilterJobs } from "./filters";
 import { FilterOnKeyPhrases } from "./filters/data.js";
 import { ReadJsonFile } from "./util/index.js";
-import { BuildEmail } from "./emailer/email.js";
+import { BuildEmail } from "./emailer/builder.js";
+import { CreateEmailTransporter } from "./cfg/nodemailer.js";
 
 try {
   const config = await ReadJsonFile<Config>("../config.json");
-  console.log(config);
   const db = await SetupDb();
+  const transporter = CreateEmailTransporter(config.emailConfig);
   const linkedinJobs = await ReadJsonFile<LinkedinJob[]>(
     "../../dummydata/jobs.json"
   );
