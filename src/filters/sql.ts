@@ -1,7 +1,7 @@
 import { FetchAll } from "../sql";
 import sqlite3 from "sqlite3";
 
-export async function FilterById(
+export async function FilterLinkedinById(
   db: sqlite3.Database,
   jobs: Array<LinkedinJob>
 ): Promise<LinkedinJob[]> {

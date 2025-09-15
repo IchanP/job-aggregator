@@ -13,7 +13,7 @@ const headers = {
 };
 
 export async function LinkedinBulk(
-  params: LinkedInConfig
+  params: LinkedinApiParams
 ): Promise<Array<LinkedinJob>> {
   try {
     if (!headers["x-rapidapi-key"]) throw new Error("Missing API key.");

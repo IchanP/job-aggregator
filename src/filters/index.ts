@@ -1,7 +1,7 @@
-import { FilterById } from "./sql";
+import { FilterLinkedinById } from "./sql";
 import { FilterByTitle } from "./data";
 
-export { FilterById };
+export { FilterLinkedinById };
 
 // Filters jobs by several metrics.
 // Only title for now...

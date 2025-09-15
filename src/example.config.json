@@ -1,0 +1,38 @@
+{
+   "blacklist": ["[0-9]+ years of.*experience", "några\\s+års?\\s+arbetslivserfarenhet", "senior"],
+   "linkedInConfig": {
+      "call": true,
+      "linkedInParams": [{
+         "experience": "internship,entry_level",
+         "location": "sweden",
+         "keyword": "software",
+         "timePosted": "1week"
+      }, {
+         "experience": "internship,entry_level",
+         "location": "sweden",
+         "keyword": "developer",
+         "timePosted": "1week"
+      }, {
+         "experience": "internship,entry_level",
+         "location": "Östergötland County, Sweden",
+         "keyword": "fullstack",
+         "timePosted": "1week"
+      }, {
+         "experience": "internship,entry_level",
+         "location": "Östergötland County, Sweden",
+         "keyword": "software",
+         "timePosted": "1week"
+      }, {
+         "experience": "internship,entry_level",
+         "location": "Östergötland County, Sweden",
+         "keyword": "developer",
+         "timePosted": "1week"
+      }]
+   },
+   "emailConfig": {
+      "service": "gmail",
+      "sender": "examplesender@gmail.com",
+      "receiver": "examplereceiver@proton.me"
+   },
+   "keywords": ["typescript", "javascript", "node.js", "nodejs", "mongodb", "react"]
+}
