@@ -4,11 +4,10 @@ import { SetupDb } from "./cfg/sqlite.js";
 import { InsertJobs } from "./sql/load.js";
 import { FilterById, FilterJobs } from "./filters";
 import { FilterOnKeyPhrases } from "./filters/data.js";
-import { ReadJsonFile } from "./util/index.js";
+import { FilterUniqueJobs, ReadJsonFile } from "./util/index.js";
 import { BuildEmail } from "./emailer/builder.js";
 import { CreateEmailTransporter } from "./cfg/nodemailer.js";
 import { SendEmail } from "./emailer/sender.js";
-import { setTimeout } from "timers/promises";
 
 try {
   const config = await ReadJsonFile<Config>("../config.json");
@@ -23,12 +22,17 @@ try {
 
   console.log(`Fetched a total of ${linekdInJobs.length} from the API! \n`);
 
-  const uniqueJobs = linekdInJobs.filter(
-    (value, index, self) =>
-      self.findIndex((v) => v.jobId === value.jobId) === index
+  const uniqueJobs = FilterUniqueJobs(linekdInJobs);
+
+  console.log(
+    `Filtered duplicate jobs. A total of ${uniqueJobs.length} jobs remain.`
   );
 
   const idFilteretedJobs = await FilterById(db, uniqueJobs);
+
+  console.log(
+    `Filtered jobs by ID. A total of ${idFilteretedJobs.length} jobs remain.`
+  );
 
   const scrapableJobs = FilterJobs(uniqueJobs);
 
