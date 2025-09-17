@@ -1,4 +1,3 @@
-import { FilterUniqueJobs } from "@/util";
 import axios from "axios";
 import { setTimeout } from "timers/promises";
 import { parse } from "node-html-parser";
@@ -109,8 +108,7 @@ export class LinkedinFetcher implements JobFetcher {
       );
     }
 
-    // TODO put this in a base class?
-    return FilterUniqueJobs(jobs);
+    return this.#filter.filterUnique(jobs);
   }
 
   async #linkedinDescription(job: LinkedinJob, failedJobs: LinkedinJob[]) {

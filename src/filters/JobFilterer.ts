@@ -2,6 +2,7 @@ export interface Filterer {
   filterOnPhrase: () => void;
   filterOnTitle: () => void;
   filterById: () => Promise<void>;
+  filterUnique: (jobs: LinkedinJob[]) => LinkedinJob[];
   setJobs: (jobs: LinkedinJob[]) => void;
   getJobs(): LinkedinJob[];
 }
@@ -9,9 +10,11 @@ export interface Filterer {
 export abstract class JobFilterer implements Filterer {
   protected jobs: LinkedinJob[] = [];
   private filteredWords: Array<string>;
+  private keywords: Array<string>;
 
-  constructor(blacklist: string[]) {
+  constructor(blacklist: string[], kewyords: string[]) {
     this.filteredWords = blacklist;
+    this.keywords = kewyords;
   }
 
   setJobs(jobs: LinkedinJob[]) {
@@ -23,6 +26,13 @@ export abstract class JobFilterer implements Filterer {
     return Array.from(this.jobs); // Don't care that it's a shallow copy.
   }
 
+  filterUnique(jobs: LinkedinJob[]): LinkedinJob[] {
+    return jobs.filter(
+      (value, index, self) =>
+        self.findIndex((v) => v.jobId === value.jobId) === index
+    );
+  }
+
   filterOnPhrase(): void {
     const filtered: Array<LinkedinJob> = [];
 
@@ -31,6 +41,7 @@ export abstract class JobFilterer implements Filterer {
     for (const job of this.jobs) {
       let shouldFilter = false;
 
+      // Only add jobs that don't have this phrase
       for (const pattern of this.filteredWords) {
         try {
           const regex = new RegExp(pattern, "i");
@@ -53,6 +64,24 @@ export abstract class JobFilterer implements Filterer {
       if (!shouldFilter) {
         filtered.push(job);
       }
+
+      /*       // TODO - Remove this filter and keep the highlight?
+      let hasKeyword = false;
+      // Only add jobs that have these keywords
+      for (const keyword of this.keywords) {
+        if (
+          (job.description &&
+            job.description.toLowerCase().includes(keyword.toLowerCase())) ||
+          job.title.toLowerCase().includes(keyword.toLowerCase())
+        ) {
+          hasKeyword = true;
+          break;
+        }
+      }
+
+      if (hasKeyword) {
+        filtered.push(job);
+      } */
     }
 
     console.log(

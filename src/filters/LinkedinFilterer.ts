@@ -5,8 +5,8 @@ import { SqlRunner } from "@/sql/SqlRunner";
 export class LinkedinFilterer extends JobFilterer {
   #db: Database;
 
-  constructor(db: Database, blacklist: string[]) {
-    super(blacklist);
+  constructor(db: Database, blacklist: string[], keywords: string[]) {
+    super(blacklist, keywords);
     this.#db = db;
   }
 

@@ -8,10 +8,3 @@ export async function ReadJsonFile<T>(filePath: string) {
   const res = fs.readFileSync(path.join(__dirname, filePath), "utf-8");
   return JSON.parse(res) as T;
 }
-
-export function FilterUniqueJobs(jobs: LinkedinJob[]): LinkedinJob[] {
-  return jobs.filter(
-    (value, index, self) =>
-      self.findIndex((v) => v.jobId === value.jobId) === index
-  );
-}
