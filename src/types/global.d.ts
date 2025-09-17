@@ -48,3 +48,7 @@ interface Config {
   keywords: Array<string>;
   emailConfig: EmailConfig;
 }
+
+interface JobFetcher {
+  fetchJobs(): Promise<Array<LinkedinJob>>;
+}
