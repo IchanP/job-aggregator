@@ -1,0 +1,1 @@
+type JobBoards = "linkedin" | "af";

@@ -1,6 +1,8 @@
 import { SqlRunner } from "@/sql/SqlRunner";
 import sqlite3 from "sqlite3";
 
+// TODO set up AF table...
+
 export async function SetupDb(): Promise<sqlite3.Database> {
   try {
     const db = new sqlite3.Database("jobs.db");

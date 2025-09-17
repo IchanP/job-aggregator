@@ -47,7 +47,7 @@ export class SqlRunner {
   static async insertJobs(
     db: sqlite3.Database,
     jobs: Array<LinkedinJob>,
-    table: "linkedin"
+    table: JobBoards
   ) {
     try {
       if (jobs.length === 0) return;
@@ -60,7 +60,7 @@ export class SqlRunner {
       const result = await SqlRunner.runSQL(db, sql, params);
       const skipped = jobs.length - result.changes;
       console.log(
-        `\n >>>>> Successfully inserted ${result.changes} rows. Skipped a total of ${skipped} rows.... <<<<\n`
+        `\n >>>>> Successfully inserted ${result.changes} rows into ${table}. Skipped a total of ${skipped} rows.... <<<<\n`
       );
     } catch (e) {
       console.error(`Failed to load jobs into Linkedin table: ${e}`);

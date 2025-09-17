@@ -8,6 +8,9 @@ export class LinkedinFetcher implements JobFetcher {
   #params: LinkedinApiParams[] = [];
   #uniqueJobs: LinkedinJob[] = [];
 
+  // TODO add this to constructor?
+  board: JobBoards = "linkedin";
+
   #request_url =
     "https://linkdapi-best-unofficial-linkedin-api.p.rapidapi.com/api/v1/jobs/search";
 

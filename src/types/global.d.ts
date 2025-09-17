@@ -45,10 +45,7 @@ interface LinkedinJob {
 interface Config {
   blacklist: Array<string>;
   linkedInConfig: LinekdInConfig;
+  afConfig: AfConfig;
   keywords: Array<string>;
   emailConfig: EmailConfig;
-}
-
-interface JobFetcher {
-  fetchJobs(): Promise<Array<LinkedinJob>>;
 }
