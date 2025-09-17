@@ -7,6 +7,7 @@ import { Filterer } from "@/filters/JobFilterer";
 export class LinkedinFetcher implements JobFetcher {
   #filter: Filterer;
   #params: LinkedinApiParams[] = [];
+  #uniqueJobs: LinkedinJob[] = [];
 
   #request_url =
     "https://linkdapi-best-unofficial-linkedin-api.p.rapidapi.com/api/v1/jobs/search";
@@ -22,14 +23,20 @@ export class LinkedinFetcher implements JobFetcher {
     this.#filter = filter;
   }
 
+  getUniqueJobs(): LinkedinJob[] {
+    return Array.from(this.#uniqueJobs);
+  }
+
   async fetchJobs(): Promise<Array<LinkedinJob>> {
     let ids: LinkedinJob[] = [];
     for (let i = 0; i < this.#params.length; i++) {
-      ids = await this.#fetchIds(this.#params[i]);
+      ids.push(...(await this.#fetchIds(this.#params[i])));
     }
 
     this.#filter.setJobs(ids);
-    this.#filter.filterById();
+    await this.#filter.filterById();
+    this.#uniqueJobs = this.#filter.getJobs();
+
     this.#filter.filterOnTitle();
 
     const describedJobs = await this.#scrapeLinkedinBulk(

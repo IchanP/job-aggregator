@@ -20,7 +20,7 @@ export abstract class JobFilterer implements Filterer {
   }
 
   getJobs() {
-    return this.jobs;
+    return Array.from(this.jobs); // Don't care that it's a shallow copy.
   }
 
   filterOnPhrase(): void {
