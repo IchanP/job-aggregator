@@ -1,5 +1,7 @@
 import sqlite3 from "sqlite3";
-import { RunSQL } from ".";
+import { SqlRunner } from "./SqlRunner";
+
+// TODO turn into what, class??
 
 /**
  * TODO - Fix this so bulk insertion doesn't fail if ID is not unique...
@@ -17,7 +19,7 @@ export async function InsertJobs(
     const placeholder = jobs.map(() => "(?, ?)").join(", ");
     const sql = `INSERT INTO linkedin(id, exactDate) VALUES ${placeholder}`;
 
-    await RunSQL(db, sql, params);
+    await SqlRunner.runSQL(db, sql, params);
   } catch (e) {
     console.error(`Failed to load jobs into Linkedin table: ${e}`);
   }

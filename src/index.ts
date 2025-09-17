@@ -9,6 +9,8 @@ import { BuildEmail } from "./emailer/builder.js";
 import { CreateEmailTransporter } from "./cfg/nodemailer.js";
 import { SendEmail } from "./emailer/sender.js";
 import { Database } from "sqlite3";
+import { LinkedinFetcher } from "./boards/LinkedinFetcher.js";
+import { LinkedinFilterer } from "./filters/LinkedinFilterer.js";
 
 try {
   const config = await ReadJsonFile<Config>("../config.json");
@@ -44,37 +46,4 @@ try {
   // TODO - close DB when the script goes into idle mode...
 } catch (e) {
   console.error(`An unexpected error happened, the program will exit: ${e}`);
-}
-
-async function LinkedinFetch(
-  config: LinekdInConfig,
-  db: Database,
-  idFilter: LinkedinJob[]
-) {
-  const linekdInJobs = [];
-
-  for (let i = 0; i < config.linkedInParams.length; i++) {
-    linekdInJobs.push(...(await LinkedinBulk(config.linkedInParams[i])));
-  }
-
-  console.log(`Fetched a total of ${linekdInJobs.length} from the API! \n`);
-
-  const uniqueJobs = FilterUniqueJobs(linekdInJobs);
-
-  console.log(
-    `Filtered duplicate jobs. A total of ${uniqueJobs.length} jobs remain.`
-  );
-
-  const idFilteretedJobs = await FilterLinkedinById(db, uniqueJobs);
-
-  idFilter.push(...idFilteretedJobs);
-
-  console.log(
-    `Filtered jobs by ID. A total of ${idFilteretedJobs.length} jobs remain.`
-  );
-
-  const scrapableJobs = FilterJobs(uniqueJobs);
-
-  // Bulk scrape... a bit bad practice since we're directly modifying the job object but it's the cleanest way
-  return await ScrapeLinkedinBulk(scrapableJobs);
 }

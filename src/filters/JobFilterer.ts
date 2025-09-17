@@ -1,20 +1,37 @@
+export interface Filterer {
+  filterOnPhrase: () => void;
+  filterOnTitle: () => void;
+  filterById: () => Promise<void>;
+  setJobs: (jobs: LinkedinJob[]) => void;
+  getJobs(): LinkedinJob[];
+}
+
 export abstract class JobFilterer implements Filterer {
   protected jobs: LinkedinJob[] = [];
+  private filteredWords: Array<string>;
+
+  constructor(blacklist: string[]) {
+    this.filteredWords = blacklist;
+  }
 
   setJobs(jobs: LinkedinJob[]) {
     // TODO do some verification?
     this.jobs = jobs;
   }
 
-  filterOnPhrase(phrases: Array<string>): Array<LinkedinJob> {
+  getJobs() {
+    return this.jobs;
+  }
+
+  filterOnPhrase(): void {
     const filtered: Array<LinkedinJob> = [];
 
     let totalFiltered = 0;
 
-    for (const job of this.#jobs) {
+    for (const job of this.jobs) {
       let shouldFilter = false;
 
-      for (const pattern of phrases) {
+      for (const pattern of this.filteredWords) {
         try {
           const regex = new RegExp(pattern, "i");
           if (job.description?.match(regex)) {
@@ -42,19 +59,19 @@ export abstract class JobFilterer implements Filterer {
       `\n>>>>>>>>>> Filtered a total of: ${totalFiltered} jobs based on their description. <<<<<<<<<<\n`
     );
 
-    return filtered;
+    this.setJobs(filtered);
   }
 
-  filterOnTitle(): Array<LinkedinJob> {
+  filterOnTitle(): void {
     const filtered: LinkedinJob[] = [];
 
-    for (const job of this.#jobs) {
+    for (const job of this.jobs) {
       if (this.#checkLatinCharacterCount(job.title)) {
         filtered.push(job);
       }
     }
 
-    return filtered;
+    this.setJobs(filtered);
   }
 
   #checkLatinCharacterCount(str: string) {
@@ -68,5 +85,5 @@ export abstract class JobFilterer implements Filterer {
     return nonLatin / str.length < 0.5;
   }
 
-  abstract filterById(jobs: LinkedinJob[]): Promise<Array<LinkedinJob>>;
+  abstract filterById(): Promise<void>;
 }

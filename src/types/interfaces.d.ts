@@ -1,8 +1,8 @@
 interface Filterer {
-  filterOnPhrase: (phrases: Array<string>) => Array<LinkedinJob>;
-  filterOnTitle: () => Array<LinkedinJob>;
+  filterOnPhrase: (phrases: Array<string>) => void;
+  filterOnTitle: () => void;
   setJobs: (jobs: LinkedinJob[]) => void;
-  filterById: (jobs: LinkedinJob[]) => Promise<Array<LinkedinJob>>;
+  filterById: () => Promise<void>;
 }
 
 interface JobFetcher {

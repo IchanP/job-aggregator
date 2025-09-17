@@ -1,4 +1,4 @@
-import { ExecuteSql } from "@/sql";
+import { SqlRunner } from "@/sql/SqlRunner";
 import sqlite3 from "sqlite3";
 
 export async function SetupDb(): Promise<sqlite3.Database> {
@@ -19,7 +19,7 @@ async function SetupLinkedinTable(database: sqlite3.Database) {
     exactDate DATE NOT NULL
     )`;
 
-    await ExecuteSql(database, linkedSql);
+    await SqlRunner.executeSql(database, linkedSql);
     console.log("Linkedin table successfully created.");
   } catch (e) {
     console.error(`Failed to create Linkedin SQLite table: ${e}`);
