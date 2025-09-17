@@ -28,11 +28,7 @@ export class JobFetcherFactory {
   #createFilter(source: JobBoards): Filterer {
     switch (source) {
       case "linkedin":
-        return new LinkedinFilterer(
-          this.#db,
-          this.#config.blacklist,
-          this.#config.keywords
-        );
+        return new LinkedinFilterer(this.#db, this.#config.blacklist);
       default:
         throw new Error(`Have not implemented filter for source: ${source}`);
     }

@@ -1,17 +1,15 @@
 import "./cfg/sqlite.js";
-import { SetupDb } from "./cfg/sqlite.js";
-import { ReadJsonFile } from "./util/index.js";
-import { CreateEmailTransporter } from "./cfg/nodemailer.js";
+import { setupDb } from "./cfg/sqlite.js";
+import { readJsonFile } from "./util/index.js";
+import { createEmailTransporter } from "./cfg/nodemailer.js";
 import { SqlRunner } from "./sql/SqlRunner.js";
-import { LinkedinFilterer } from "./filters/LinkedinFilterer.js";
-import { LinkedinFetcher } from "./boards/LinkedinFetcher.js";
 import { Emailer } from "./emailer/Emailer.js";
 import { JobFetcherFactory } from "./boards/JobFetcherFactory.js";
 
 try {
-  const config = await ReadJsonFile<Config>("../config.json");
-  const db = await SetupDb();
-  const transporter = CreateEmailTransporter(config.emailConfig);
+  const config = await readJsonFile<Config>("../config.json");
+  const db = await setupDb();
+  const transporter = createEmailTransporter(config.emailConfig);
   const emailer = new Emailer(transporter, config.emailConfig);
   const fetcherFactory = new JobFetcherFactory(config, db);
 

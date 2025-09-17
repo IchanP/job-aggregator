@@ -3,10 +3,10 @@ import sqlite3 from "sqlite3";
 
 // TODO set up AF table...
 
-export async function SetupDb(): Promise<sqlite3.Database> {
+export async function setupDb(): Promise<sqlite3.Database> {
   try {
     const db = new sqlite3.Database("jobs.db");
-    await SetupLinkedinTable(db);
+    await setupLinkedinTable(db);
     return db;
   } catch (e) {
     console.error(`Failed to setup SQLite database: ${e}`);
@@ -14,7 +14,7 @@ export async function SetupDb(): Promise<sqlite3.Database> {
   }
 }
 
-async function SetupLinkedinTable(database: sqlite3.Database) {
+async function setupLinkedinTable(database: sqlite3.Database) {
   try {
     const linkedSql = `CREATE TABLE IF NOT EXISTS linkedin (
     id INTEGER PRIMARY KEY,

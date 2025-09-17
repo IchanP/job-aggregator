@@ -2,19 +2,19 @@ export interface Filterer {
   filterOnPhrase: () => void;
   filterOnTitle: () => void;
   filterById: () => Promise<void>;
-  filterUnique: (jobs: LinkedinJob[]) => LinkedinJob[];
+  filterUnique: () => LinkedinJob[];
   setJobs: (jobs: LinkedinJob[]) => void;
   getJobs(): LinkedinJob[];
 }
 
+// TODO clean up this so we don't set the jobs on every func call...
+
 export abstract class JobFilterer implements Filterer {
   protected jobs: LinkedinJob[] = [];
   private filteredWords: Array<string>;
-  private keywords: Array<string>;
 
-  constructor(blacklist: string[], kewyords: string[]) {
+  constructor(blacklist: string[]) {
     this.filteredWords = blacklist;
-    this.keywords = kewyords;
   }
 
   setJobs(jobs: LinkedinJob[]) {
@@ -26,16 +26,22 @@ export abstract class JobFilterer implements Filterer {
     return Array.from(this.jobs); // Don't care that it's a shallow copy.
   }
 
-  filterUnique(jobs: LinkedinJob[]): LinkedinJob[] {
-    return jobs.filter(
+  filterUnique(): LinkedinJob[] {
+    const unique = this.jobs.filter(
       (value, index, self) =>
         self.findIndex((v) => v.jobId === value.jobId) === index
     );
+    const removedJobs = this.jobs.length - unique.length;
+    console.log(`\nFiltered a total of ${removedJobs} duplicate jobs.`);
+    return unique;
   }
 
   filterOnPhrase(): void {
-    const filtered: Array<LinkedinJob> = [];
+    console.log(
+      `Starting process of filtering ${this.jobs.length} jobs basesd on their description.`
+    );
 
+    const filtered: Array<LinkedinJob> = [];
     let totalFiltered = 0;
 
     for (const job of this.jobs) {
@@ -64,24 +70,6 @@ export abstract class JobFilterer implements Filterer {
       if (!shouldFilter) {
         filtered.push(job);
       }
-
-      /*       // TODO - Remove this filter and keep the highlight?
-      let hasKeyword = false;
-      // Only add jobs that have these keywords
-      for (const keyword of this.keywords) {
-        if (
-          (job.description &&
-            job.description.toLowerCase().includes(keyword.toLowerCase())) ||
-          job.title.toLowerCase().includes(keyword.toLowerCase())
-        ) {
-          hasKeyword = true;
-          break;
-        }
-      }
-
-      if (hasKeyword) {
-        filtered.push(job);
-      } */
     }
 
     console.log(

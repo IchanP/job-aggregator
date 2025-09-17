@@ -37,13 +37,17 @@ export class LinkedinFetcher implements JobFetcher {
 
     this.#filter.setJobs(ids);
     await this.#filter.filterById();
-    this.#uniqueJobs = this.#filter.getJobs();
-
     this.#filter.filterOnTitle();
-
+    this.#uniqueJobs = this.#filter.filterUnique();
+    this.#filter.setJobs(this.#uniqueJobs);
     const describedJobs = await this.#scrapeLinkedinBulk(
       this.#filter.getJobs()
     );
+
+    console.log(
+      `\nTotal of ${describedJobs.length} described jobs remaining. \n`
+    );
+
     this.#filter.setJobs(describedJobs);
     this.#filter.filterOnPhrase();
 
@@ -111,7 +115,11 @@ export class LinkedinFetcher implements JobFetcher {
       );
     }
 
-    return this.#filter.filterUnique(jobs);
+    const uniqueJobs = this.#filter.filterUnique(jobs);
+    const removedJobs = jobs.length - uniqueJobs.length;
+    console.log(`\nFiltered a total of ${removedJobs} duplicate jobs.`);
+
+    return jobs;
   }
 
   async #linkedinDescription(job: LinkedinJob, failedJobs: LinkedinJob[]) {

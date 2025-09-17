@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export function CreateEmailTransporter(config: EmailConfig) {
+export function createEmailTransporter(config: EmailConfig) {
   const transporter = nodemailer.createTransport({
     service: config.service,
     auth: {
